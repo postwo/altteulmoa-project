@@ -19,12 +19,16 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable) // 시큐리티에서 사용한 form login 기능 비활성화
                 .httpBasic(Customizer.withDefaults()) // 브라우저 팝업 형태의 기본 인증창
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/public/**","/api/auth/**").permitAll()
                         .requestMatchers("/api/private/**").authenticated()
                         .anyRequest().denyAll());
 
         return http.build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }
