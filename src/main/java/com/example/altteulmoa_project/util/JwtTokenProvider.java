@@ -22,11 +22,35 @@ public class JwtTokenProvider {
     private final long expiration = 1000L * 60 * 60 ; // 1시간
 
     // 토큰 생성
-    public String generateToken (String username){
+//    public String generateToken (String username){
+//        return Jwts.builder()
+//                .setSubject(username) // 토큰에 이름추가
+//                .setIssuedAt(new Date()) // 토큰 생성 시간
+//                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // 만료시간
+//                .signWith(key) // 이거는 위에 만들어둔 키로 토큰을 생성 한다는 의미이다
+//                .compact();
+//    }
+
+    // accesstoken 토큰 생성
+    public String generateAccessToken (String username){
+        long expiration_30m = 1000L * 60 * 30; // 30분
+
         return Jwts.builder()
                 .setSubject(username) // 토큰에 이름추가
                 .setIssuedAt(new Date()) // 토큰 생성 시간
-                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // 만료시간
+                .setExpiration(new Date(System.currentTimeMillis() + expiration_30m)) // 만료시간
+                .signWith(key) // 이거는 위에 만들어둔 키로 토큰을 생성 한다는 의미이다
+                .compact();
+    }
+
+    // refreshtoken 토큰 생성
+    public String generateRefreshToken (String username){
+        long expiration_7d = 1000L * 60 * 60 * 24 * 7; // 7일
+
+        return Jwts.builder()
+                .setSubject(username) // 토큰에 이름추가
+                .setIssuedAt(new Date()) // 토큰 생성 시간
+                .setExpiration(new Date(System.currentTimeMillis() + expiration_7d)) // 만료시간
                 .signWith(key) // 이거는 위에 만들어둔 키로 토큰을 생성 한다는 의미이다
                 .compact();
     }

@@ -1,6 +1,7 @@
 package com.example.altteulmoa_project.service;
 
 import com.example.altteulmoa_project.dto.LoginRequestDTO;
+import com.example.altteulmoa_project.dto.LoginResponseDTO;
 import com.example.altteulmoa_project.dto.UserRequestDTO;
 import com.example.altteulmoa_project.entity.User;
 import com.example.altteulmoa_project.repository.UserRepository;
@@ -35,7 +36,7 @@ public class UserService {
     }
 
     //로그인
-    public String login(LoginRequestDTO loginRequestDTO) {
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
         // 유저가 있는지 검사
         User user =userRepository.findByUsername(loginRequestDTO.getUsername()).orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다"));
 
@@ -44,7 +45,13 @@ public class UserService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다");
         }
 
-        return jwtTokenProvider.generateToken(user.getUsername());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return new LoginResponseDTO(accessToken, refreshToken);
     }
 
 
