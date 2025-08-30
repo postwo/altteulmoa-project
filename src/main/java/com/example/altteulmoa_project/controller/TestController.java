@@ -1,18 +1,16 @@
 package com.example.altteulmoa_project.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/private")
 public class TestController {
 
-    @GetMapping("/api/public/hello")
-    public String publicHello() {
-        return "public hello world";
-    }
 
-    @GetMapping("/api/private/hello")
+    @GetMapping("/hello")
     public String privateHello() {
-        return "private hello world";
+        return "인증된 사용자";
     }
 }
