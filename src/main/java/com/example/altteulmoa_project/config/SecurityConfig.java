@@ -20,6 +20,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable) // 시큐리티에서 사용한 form login 기능 비활성화
                 .httpBasic(Customizer.withDefaults()) // 브라우저 팝업 형태의 기본 인증창
@@ -29,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/private/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().denyAll())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }
