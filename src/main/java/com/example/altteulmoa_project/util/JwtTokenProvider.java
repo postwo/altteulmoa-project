@@ -32,11 +32,12 @@ public class JwtTokenProvider {
 //    }
 
     // accesstoken 토큰 생성
-    public String generateAccessToken (String username){
+    public String generateAccessToken (String username,String role){
         long expiration_30m = 1000L * 60 * 30; // 30분
 
         return Jwts.builder()
                 .setSubject(username) // 토큰에 이름추가
+                .claim("role",role)
                 .setIssuedAt(new Date()) // 토큰 생성 시간
                 .setExpiration(new Date(System.currentTimeMillis() + expiration_30m)) // 만료시간
                 .signWith(key) // 이거는 위에 만들어둔 키로 토큰을 생성 한다는 의미이다
