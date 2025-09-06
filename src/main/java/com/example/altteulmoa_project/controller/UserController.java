@@ -5,6 +5,7 @@ import com.example.altteulmoa_project.dto.LoginResponseDTO;
 import com.example.altteulmoa_project.dto.UserRequestDTO;
 import com.example.altteulmoa_project.entity.User;
 import com.example.altteulmoa_project.repository.UserRepository;
+import com.example.altteulmoa_project.service.KakaoOAuthService;
 import com.example.altteulmoa_project.service.UserService;
 import com.example.altteulmoa_project.util.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -23,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final KakaoOAuthService kakaoOAuthService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -101,4 +105,12 @@ public class UserController {
         return ResponseEntity.ok("로그아웃");
     }
 
+    // oauth 토큰 발급
+    @PostMapping("/kakao")
+    public ResponseEntity<?> oauthLogin(@RequestBody Map<String, String> body,
+                                        HttpServletResponse response) {
+        String code = body.get("code");
+        LoginResponseDTO tokens = kakaoOAuthService.kakaoLogin(code, response);
+        return ResponseEntity.ok(tokens);
+    }
 }

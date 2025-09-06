@@ -20,4 +20,9 @@ public class User {
     @Column(length = 500)
     private String refreshToken;
 
+    public User(String username, String password ,String roleUser) {
+        this.username = username;
+        this.password = password; // 굳이 안넣어도 됨
+        this.role = roleUser;
+    }
 }
