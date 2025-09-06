@@ -5,6 +5,7 @@ import com.example.altteulmoa_project.dto.LoginResponseDTO;
 import com.example.altteulmoa_project.dto.UserRequestDTO;
 import com.example.altteulmoa_project.entity.User;
 import com.example.altteulmoa_project.repository.UserRepository;
+import com.example.altteulmoa_project.service.GoogleOAuthService;
 import com.example.altteulmoa_project.service.KakaoOAuthService;
 import com.example.altteulmoa_project.service.UserService;
 import com.example.altteulmoa_project.util.JwtTokenProvider;
@@ -27,6 +28,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final KakaoOAuthService kakaoOAuthService;
+    private final GoogleOAuthService googleOAuthService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -111,6 +113,13 @@ public class UserController {
                                         HttpServletResponse response) {
         String code = body.get("code");
         LoginResponseDTO tokens = kakaoOAuthService.kakaoLogin(code, response);
+        return ResponseEntity.ok(tokens);
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> body, HttpServletResponse response) {
+        String code = body.get("code");
+        LoginResponseDTO tokens = googleOAuthService.loginWithGoogle(code, response);
         return ResponseEntity.ok(tokens);
     }
 }
